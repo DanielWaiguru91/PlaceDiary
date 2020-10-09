@@ -49,7 +49,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         else{
             fusedLocationProviderClient.lastLocation.addOnCompleteListener {
                 val currentLocation = it.result
-
+                if (currentLocation != null){
+                    val zoomLevel = 16.0f
+                    val latLng = LatLng(currentLocation.latitude, currentLocation.longitude)
+                    mMap.addMarker(MarkerOptions().position(latLng).title("Your Location"))
+                    val update = CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel)
+                    mMap.moveCamera(update)
+                }
+                else{
+                    TODO()
+                }
             }
         }
     }
