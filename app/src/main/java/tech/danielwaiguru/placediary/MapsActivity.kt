@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PointOfInterest
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import tech.danielwaiguru.placediary.common.Constants.REQUEST_PERMISSIONS_CODE
@@ -64,13 +66,31 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .build()
         placesClient.fetchPlace(request).addOnSuccessListener { placeResponse ->
             val place = placeResponse.place
-            Toast.makeText(this,
-                "${place.name}, ${place.phoneNumber}, ${place.address}",
-            Toast.LENGTH_LONG).show()
+            getPlacePhoto(place)
         }
             .addOnFailureListener {
                 if (it is ApiException){
                     Timber.d(it)
+                }
+            }
+    }
+    private fun getPlacePhoto(place: Place){
+        val photoMetaData = place.photoMetadatas?.get(0)
+        if (photoMetaData == null){
+            return
+        }
+        val photoRequest = FetchPhotoRequest
+            .builder(photoMetaData)
+            .setMaxWidth(resources.getDimensionPixelSize(R.dimen.photo_size_width))
+            .setMaxHeight(resources.getDimensionPixelSize(R.dimen.photo_size_height))
+            .build()
+        placesClient.fetchPhoto(photoRequest).addOnSuccessListener { photoResponse ->
+            val bitmap = photoResponse.bitmap
+
+        }
+            .addOnFailureListener {
+                if (it is ApiException){
+                    Timber.d("it: ${it.statusCode}")
                 }
             }
     }
