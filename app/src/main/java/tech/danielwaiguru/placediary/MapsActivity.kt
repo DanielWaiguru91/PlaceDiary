@@ -49,7 +49,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         else{
             fusedLocationProviderClient.lastLocation.addOnCompleteListener {
                 val currentLocation = it.result
-                
+
             }
         }
     }
