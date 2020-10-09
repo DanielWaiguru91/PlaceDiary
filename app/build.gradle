@@ -38,5 +38,7 @@ dependencies {
 
     //Location
     implementation "com.google.android.gms:play-services-location:$location_version"
+    //Timber
+    implementation "com.jakewharton.timber:timber:$timber_version"
 
 }
