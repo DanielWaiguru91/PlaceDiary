@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -13,7 +14,10 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.PointOfInterest
 import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import tech.danielwaiguru.placediary.common.Constants.REQUEST_PERMISSIONS_CODE
 import timber.log.Timber
@@ -37,12 +41,38 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
         getCurrentLocation()
         mMap.setOnPoiClickListener {
-            Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
+            detailPoi(it)
         }
     }
     private fun initPlacesClient(){
         Places.initialize(applicationContext, getString(R.string.google_maps_key))
         placesClient = Places.createClient(this)
+    }
+    //display detailed info of a poi selected
+    private fun detailPoi(pointOfInterest: PointOfInterest){
+        val placeId = pointOfInterest.placeId
+        val placeDataFields = listOf(
+            Place.Field.ID,
+            Place.Field.NAME,
+            Place.Field.PHONE_NUMBER,
+            Place.Field.PHOTO_METADATAS,
+            Place.Field.ADDRESS,
+            Place.Field.LAT_LNG
+        )
+        val request = FetchPlaceRequest
+            .builder(placeId, placeDataFields)
+            .build()
+        placesClient.fetchPlace(request).addOnSuccessListener { placeResponse ->
+            val place = placeResponse.place
+            Toast.makeText(this,
+                "${place.name}, ${place.phoneNumber}, ${place.address}",
+            Toast.LENGTH_LONG).show()
+        }
+            .addOnFailureListener {
+                if (it is ApiException){
+                    Timber.d(it)
+                }
+            }
     }
     private fun locationProviderClient(){
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
