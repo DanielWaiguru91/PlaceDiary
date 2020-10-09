@@ -5,19 +5,21 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import tech.danielwaiguru.placediary.common.Constants.FASTEST_LOCATION_UPDATES_INTERVAL
+import tech.danielwaiguru.placediary.common.Constants.LOCATION_UPDATES_INTERVAL
 import tech.danielwaiguru.placediary.common.Constants.REQUEST_PERMISSIONS_CODE
 import timber.log.Timber
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
+    private var locationRequest: LocationRequest? = null
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +44,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             requestPermissions()
         }
         else{
+            if (locationRequest == null){
+                locationRequest = LocationRequest.create()
+                locationRequest?.let {locationRequest ->
+                    locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                    locationRequest.interval = LOCATION_UPDATES_INTERVAL
+                    locationRequest.fastestInterval = FASTEST_LOCATION_UPDATES_INTERVAL
+                    val locationCallback = object : LocationCallback(){
+                        override fun onLocationResult(locationResult: LocationResult?) {
+                            super.onLocationResult(locationResult)
+                            getCurrentLocation()
+                        }
+                    }
+                    fusedLocationProviderClient.requestLocationUpdates(
+                        locationRequest, locationCallback, null
+                    )
+                }
+            }
             fusedLocationProviderClient.lastLocation.addOnCompleteListener {
                 val currentLocation = it.result
                 if (currentLocation != null){
                     val zoomLevel = 16.0f
                     val latLng = LatLng(currentLocation.latitude, currentLocation.longitude)
+                    mMap.clear()
                     mMap.addMarker(MarkerOptions().position(latLng).title("Your Location"))
                     val update = CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel)
                     mMap.moveCamera(update)
@@ -68,12 +88,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 getCurrentLocation()
             }
-            else if(grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_DENIED){
+           /* else if(grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_DENIED){
                 if(ActivityCompat
                         .shouldShowRequestPermissionRationale(
                             this, Manifest.permission.ACCESS_FINE_LOCATION)){
                 }
-            }
+            }*/
         }
     }
     private fun requestPermissions(){
