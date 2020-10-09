@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">PlaceDiary</string>
     <string name="title_activity_maps">PlaceDiary</string>
+    <string name="location_error">Location is null</string>
 </resources>
