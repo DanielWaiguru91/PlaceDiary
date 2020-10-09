@@ -38,6 +38,8 @@ dependencies {
 
     //Location
     implementation "com.google.android.gms:play-services-location:$location_version"
+    //Places API
+    implementation "com.google.android.libraries.places:places:$google_places_version"
     //Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
 

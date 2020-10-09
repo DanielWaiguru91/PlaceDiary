@@ -5,6 +5,7 @@ buildscript {
         maps_version = "17.0.0"
         location_version = "17.1.0"
         timber_version = "4.7.1"
+        google_places_version = "2.4.0"
     }
     repositories {
         google()
