@@ -2,6 +2,7 @@ package tech.danielwaiguru.placediary
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,13 +15,16 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PointOfInterest
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import tech.danielwaiguru.placediary.adapters.InfoWindowAdapter
 import tech.danielwaiguru.placediary.common.Constants.REQUEST_PERMISSIONS_CODE
 import timber.log.Timber
 
@@ -41,6 +45,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.setInfoWindowAdapter(InfoWindowAdapter(this))
         getCurrentLocation()
         mMap.setOnPoiClickListener {
             detailPoi(it)
@@ -77,6 +82,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun getPlacePhoto(place: Place){
         val photoMetaData = place.photoMetadatas?.get(0)
         if (photoMetaData == null){
+            addPoiMarker(place, null)
             return
         }
         val photoRequest = FetchPhotoRequest
@@ -86,13 +92,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .build()
         placesClient.fetchPhoto(photoRequest).addOnSuccessListener { photoResponse ->
             val bitmap = photoResponse.bitmap
-
+            addPoiMarker(place,bitmap)
         }
             .addOnFailureListener {
                 if (it is ApiException){
                     Timber.d("it: ${it.statusCode}")
                 }
             }
+    }
+    private fun addPoiMarker(place: Place, photo: Bitmap?){
+        val placePhoto = if (photo == null){
+            BitmapDescriptorFactory.defaultMarker()
+        }
+        else{
+            BitmapDescriptorFactory.fromBitmap(photo)
+        }
+        mMap.addMarker(MarkerOptions()
+            .position(place.latLng as LatLng)
+            .icon(placePhoto)
+            .title(place.name)
+            .snippet(place.phoneNumber)
+        )
     }
     private fun locationProviderClient(){
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)

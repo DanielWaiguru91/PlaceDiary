@@ -42,5 +42,7 @@ dependencies {
     implementation "com.google.android.libraries.places:places:$google_places_version"
     //Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
+    //Circle ImageView
+    implementation "com.mikhaellopez:circularimageview:$circle_imageview_version"
 
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/padding_bottom"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/poiPhoto"
+        android:layout_width="@dimen/photo_size"
+        android:layout_height="@dimen/photo_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:civ_border_color="@color/primaryTextColor"
+        app:civ_border_width="@dimen/border_width"
+
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_marginTop="@dimen/margin_top"
+        />
+    <TextView
+        android:id="@+id/poiName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintStart_toEndOf="@id/poiPhoto"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_marginStart="@dimen/margin"
+
+        app:layout_constraintTop_toTopOf="@id/poiPhoto"
+        />
+    <TextView
+        android:id="@+id/poiPhone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/poiName"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/margin"
+        app:layout_constraintStart_toStartOf="@id/poiName"
+        android:layout_marginTop="@dimen/margin_top"
+        />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/poiPhone"
+        app:layout_constraintEnd_toEndOf="@id/poiPhone"
+        app:layout_constraintStart_toStartOf="@id/poiPhone"
+        android:layout_marginTop="@dimen/margin_top"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
