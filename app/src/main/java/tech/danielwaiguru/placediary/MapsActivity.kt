@@ -101,18 +101,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
     }
     private fun addPoiMarker(place: Place, photo: Bitmap?){
-        val placePhoto = if (photo == null){
+        /*val placePhoto = if (photo == null){
             BitmapDescriptorFactory.defaultMarker()
         }
         else{
             BitmapDescriptorFactory.fromBitmap(photo)
-        }
-        mMap.addMarker(MarkerOptions()
+        }*/
+        val marker = mMap.addMarker(MarkerOptions()
             .position(place.latLng as LatLng)
-            .icon(placePhoto)
             .title(place.name)
             .snippet(place.phoneNumber)
         )
+        marker.tag = photo
     }
     private fun locationProviderClient(){
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
