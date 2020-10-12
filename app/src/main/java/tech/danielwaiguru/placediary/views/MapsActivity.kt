@@ -15,6 +15,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PointOfInterest
 import com.google.android.libraries.places.api.Places
@@ -25,6 +26,7 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import tech.danielwaiguru.placediary.R
 import tech.danielwaiguru.placediary.adapters.InfoWindowAdapter
 import tech.danielwaiguru.placediary.common.Constants.REQUEST_PERMISSIONS_CODE
+import tech.danielwaiguru.placediary.models.Bookmark
 import tech.danielwaiguru.placediary.views.viewmodel.MapViewModel
 import timber.log.Timber
 
@@ -53,6 +55,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.setInfoWindowAdapter(InfoWindowAdapter(this))
         mMap.setOnPoiClickListener {
             detailPoi(it)
+        }
+        mMap.setOnInfoWindowClickListener {
+            saveMarkerInfo(it)
         }
     }
     private fun initPlacesClient(){
@@ -162,7 +167,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
-
+    private fun saveMarkerInfo(marker: Marker){
+        val placeInfo = marker.tag as PlaceInfo
+        if (placeInfo.place != null){
+            mapViewModel.createBookmark(placeInfo.place, placeInfo.image)
+        }
+        marker.remove()
+    }
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
