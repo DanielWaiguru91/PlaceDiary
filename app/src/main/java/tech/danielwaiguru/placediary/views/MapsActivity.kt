@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.api.ApiException
@@ -24,9 +25,11 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import tech.danielwaiguru.placediary.R
 import tech.danielwaiguru.placediary.adapters.InfoWindowAdapter
 import tech.danielwaiguru.placediary.common.Constants.REQUEST_PERMISSIONS_CODE
+import tech.danielwaiguru.placediary.views.viewmodel.MapViewModel
 import timber.log.Timber
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+    private val mapViewModel by viewModels<MapViewModel>()
     private lateinit var mMap: GoogleMap
     private lateinit var placesClient: PlacesClient
     //private var locationRequest: LocationRequest? = null
