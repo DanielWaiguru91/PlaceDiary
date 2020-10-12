@@ -7,6 +7,9 @@ buildscript {
         timber_version = "4.7.1"
         google_places_version = "2.4.0"
         circle_imageview_version = "4.2.0"
+        lifecycle_version = '2.2.0'
+        room_version = '2.2.4'
+        coroutines_version = '1.3.9'
     }
     repositories {
         google()
