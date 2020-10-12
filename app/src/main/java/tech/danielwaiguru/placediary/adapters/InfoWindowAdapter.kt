@@ -7,6 +7,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.custom_marker.view.*
 import tech.danielwaiguru.placediary.R
+import tech.danielwaiguru.placediary.views.MapsActivity
 
 class InfoWindowAdapter(context: Activity): GoogleMap.InfoWindowAdapter {
     private val customView: View by lazy {
@@ -22,7 +23,7 @@ class InfoWindowAdapter(context: Activity): GoogleMap.InfoWindowAdapter {
     override fun getInfoContents(marker: Marker?): View {
         customView.poiName.text = marker?.title ?: ""
         customView.poiPhone.text = marker?.snippet ?: ""
-        customView.poiPhoto.setImageBitmap(marker?.tag as Bitmap?)
+        customView.poiPhoto.setImageBitmap((marker?.tag as MapsActivity.PlaceInfo).image)
         return  customView
     }
 }

@@ -116,7 +116,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .title(place.name)
             .snippet(place.phoneNumber)
         )
-        marker.tag = photo
+        marker.tag = PlaceInfo(place, photo)
     }
     private fun locationProviderClient(){
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
@@ -191,4 +191,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         ActivityCompat
             .checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED
+    class PlaceInfo(val place: Place? = null, val image: Bitmap? = null)
 }
