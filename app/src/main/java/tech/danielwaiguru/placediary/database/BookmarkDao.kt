@@ -9,7 +9,7 @@ interface BookmarkDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addBookmark(bookmark: Bookmark)
     @Query("SELECT * FROM places")
-    suspend fun getAllBookmarks(): LiveData<List<Bookmark>>
+    fun getAllBookmarks(): LiveData<List<Bookmark>>
     @Query("SELECT * FROM places WHERE id = :bookmarkId")
     suspend fun getBookmark(bookmarkId: Int): Bookmark
     @Query("SELECT * FROM places WHERE id = :bookmarkId")
