@@ -39,7 +39,7 @@ class MapViewModel(private val repository: BookmarkRepository): ViewModel() {
             }
         }
     }
-    private fun getBookmarkMarkerView(): LiveData<List<BookmarkView>>?{
+    fun getBookmarkMarkerView(): LiveData<List<BookmarkView>>?{
         if (bookmarks == null){
             mapBookmarkToView()
         }

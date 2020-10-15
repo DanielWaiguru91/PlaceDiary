@@ -46,6 +46,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mapListeners()
+        bookmarkMarkerObserver()
         getCurrentLocation()
     }
     private fun mapListeners(){
@@ -60,6 +61,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun initPlacesClient(){
         Places.initialize(applicationContext, getString(R.string.google_maps_key))
         placesClient = Places.createClient(this)
+    }
+    private fun bookmarkMarkerObserver(){
+        mapViewModel.getBookmarkMarkerView()?.observe(this, { bookmarkViews ->
+            mMap.clear()
+            displayAllBookmarkMarkers(bookmarkViews)
+        })
     }
     //display detailed info of a poi selected
     private fun detailPoi(pointOfInterest: PointOfInterest){
@@ -181,6 +188,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         )
         marker.tag = bookmarkView
         return marker
+    }
+    private fun displayAllBookmarkMarkers(bookmarkViews: List<BookmarkView>){
+        for (bookmarkView in bookmarkViews){
+            showTappedPlace(bookmarkView)
+        }
     }
     override fun onRequestPermissionsResult(
         requestCode: Int,
