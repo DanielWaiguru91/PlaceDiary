@@ -14,10 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PointOfInterest
+import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
@@ -26,7 +23,7 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import tech.danielwaiguru.placediary.R
 import tech.danielwaiguru.placediary.adapters.InfoWindowAdapter
 import tech.danielwaiguru.placediary.common.Constants.REQUEST_PERMISSIONS_CODE
-import tech.danielwaiguru.placediary.models.Bookmark
+import tech.danielwaiguru.placediary.models.BookmarkView
 import tech.danielwaiguru.placediary.views.viewmodel.MapViewModel
 import timber.log.Timber
 
@@ -173,6 +170,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mapViewModel.createBookmark(placeInfo.place, placeInfo.image)
         }
         marker.remove()
+    }
+    private fun showTappedPlace(bookmarkView: BookmarkView): Marker? {
+        val marker = mMap.addMarker(MarkerOptions()
+            .position(bookmarkView.location)
+            .icon(BitmapDescriptorFactory.defaultMarker(
+                BitmapDescriptorFactory.HUE_AZURE
+            ))
+            .alpha(0.8f)
+        )
+        marker.tag = bookmarkView
+        return marker
     }
     override fun onRequestPermissionsResult(
         requestCode: Int,
